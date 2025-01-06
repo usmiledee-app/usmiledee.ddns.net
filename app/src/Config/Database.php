@@ -8,6 +8,7 @@ use PDOException;
 class Database
 {
     private static $conn = null;
+    protected static $log;
 
     public function __construct()
     {
@@ -26,7 +27,7 @@ class Database
             self::$conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             http_response_code(500);
-            die(json_encode(["status" => "Connection Failed", "message" => $e->getMessage()]));
+            self::$log = ["status" => "Connection Failed", "message" => $e->getMessage()];
         }
     }
 
@@ -38,10 +39,10 @@ class Database
                 $stmt->execute($params);
                 return $stmt;
             } catch (PDOException $e) {
-                $error["sql"] =  $sql;
-                $error["params"] = $params;
-                $error["message"] = $e->getMessage();
-                die(json_encode($error));
+                http_response_code(500);
+                self::$log["sql"] =  $sql;
+                self::$log["params"] = $params;
+                self::$log["message"] = $e->getMessage();
             }
         }
     }

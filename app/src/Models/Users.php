@@ -4,17 +4,16 @@ use Config\Database;
 
 class Users extends Database
 {
-    private static $result;
     public function select($id = 0)
     {
         $sql = "SELECT * FROM tbl_users";
-        $params = [];
+        $result = self::query($sql)->fetchAll();
         if ($id > 0) {
             $sql .= " WHERE id=:id";
             $params[":id"] = $id;
-            return self::query($sql, $params)->fetch();
+            $result = self::query($sql, $params)->fetch();
         }
-        return self::query($sql)->fetchAll();
+        return $result;
     }
 
     public function insert($data = null)

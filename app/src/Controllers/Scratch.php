@@ -4,8 +4,6 @@ use Config\Controller;
 
 class Scratch extends Controller
 {
-    private $input;
-    private $response;
     public function __construct()
     {
         header("Access-Control-Allow-Origin: *");
@@ -13,59 +11,59 @@ class Scratch extends Controller
         header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
         header("Access-Control-Max-Age: 3600");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-        $this->input = json_decode(file_get_contents("php://input"));
     }
 
     public function index()
     {
-        $this->response["message"] = "Hello, world!";
+        echo json_encode(["message" => "Hello, world!"]);
     }
 
     public function user($id = 0)
     {
         global $method;
-        $model = self::get_model("Users");
+        $input = json_decode(file_get_contents("php://input"));
+        $response = [];
+        $users = self::get_model("Users");
+
         switch ($method) {
             case "GET":
-                $this->response = $model->select($id);
+                if ($result = $users->select($id)) {
+                    $response = $result;
+                }
                 break;
             case "POST":
-                if (!$model->test($this->input)) {
-                    if ($model->insert($this->input)) {
-                        http_response_code(201);
-                        $this->response["message"] = "Created";
-                        exit;
-                    }
+                if ($users->test($input)) {
+                    http_response_code(302);
+                    $response["message"] = "Account already exists";
+                    break;
                 }
-                $this->response["message"] = "Already";
+                if ($users->insert($input)) {
+                    http_response_code(201);
+                    $response["message"] = "New record created successfully";
+                }
                 break;
             case "PUT":
-                if ($current = $model->test($this->input)) {
-                    if ($current["id"] !== $this->input->id) {
-                        $this->response["message"] = "Already";
-                        exit;
+                if ($current = $users->test($input)) {
+                    if ($current["id"] !== $input->id) {
+                        http_response_code(302);
+                        $response["message"] = "Account already exists";
+                        break;
                     }
                 }
-                if ($model->update($this->input)) {
-                    $this->response["message"] = "Updated";
+                if ($users->update($input)) {
+                    $response["message"] = "Records updated successfully";
                 }
                 break;
             case "DELETE":
-                if ($model->delete($id)) {
-                    $this->response["message"] = "Deleted";
+                if ($users->delete($id)) {
+                    $response["message"] = "Record deleted successfully";
                 }
                 break;
             default:
                 http_response_code(405);
-                $this->response["message"] = "Method Not Allowed";
+                $response["message"] = "Method Not Allowed";
         }
-    }
 
-    public function __destruct()
-    {
-        if (http_response_code() !== 500) {
-            echo json_encode($this->response);
-        }
+        echo json_encode($response);
     }
 }
