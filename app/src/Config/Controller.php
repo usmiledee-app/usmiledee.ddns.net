@@ -12,7 +12,7 @@ class Controller
         }
     }
 
-    protected static function get_view(string $view, array $data = null)
+    protected static function get_view(string $view, array $data = [])
     {
         if (file_exists(VIEW_DIR . $view . ".php")) {
             require_once VIEW_DIR . $view . ".php";

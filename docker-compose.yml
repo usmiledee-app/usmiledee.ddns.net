@@ -10,7 +10,7 @@ services:
       - ./app:/var/www/html
     depends_on:
       # Depends on the MySQL database service
-      - mysql-db
+      - mysql
 
   # NGINX Service
   nginx:
@@ -24,13 +24,15 @@ services:
       - "8080:80"
     depends_on:
       - php-fpm # Depends on the PHP-FPM service
-      - mysql-db # Depends on the MySQL database service
+      - mysql # Depends on the MySQL database service
 
   # MySQL Database Service
-  mysql-db:
-    image: mysql:8.0
+  mysql:
+    image: mysql:latest
+    volumes:
+      - ./db/dump.sql:/docker-entrypoint-initdb.d/dump.sql
     environment:
-      MYSQL_ROOT_PASSWORD: P@ssw0rd!
+      MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: usmiledee_gallery_db
       MYSQL_USER: usmile
       MYSQL_PASSWORD: D3v0t3D%$
@@ -43,10 +45,10 @@ services:
     image: phpmyadmin/phpmyadmin
     links:
       # Links the PHPMyAdmin service to the MySQL database service
-      - mysql-db
+      - mysql
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mysql-db
+      PMA_HOST: mysql
       # Use MySQL root password for PHPMyAdmin
-      MYSQL_ROOT_PASSWORD: P@ssw0rd!
+      MYSQL_ROOT_PASSWORD: secret

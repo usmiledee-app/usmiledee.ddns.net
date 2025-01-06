@@ -1,5 +1,5 @@
 # Add PHP-FPM base image
-FROM php:8.2-fpm
+FROM php:fpm-alpine
 
 # Install your extensions
 # To connect to MySQL, add mysqli

@@ -9,17 +9,6 @@
 
 <body>
     <h1>Dashboard</h1>
-    <code id="example"></code>
-    <script>
-        var output = document.getElementById("example");
-
-        fetchDefault();
-
-        async function fetchDefault() {
-            var result = await fetch('/scratch/user/');
-            console.log(result);
-        }
-    </script>
 </body>
 
 </html>

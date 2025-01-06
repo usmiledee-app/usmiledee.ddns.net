@@ -31,14 +31,30 @@ class Scratch extends Controller
                 $this->response = $model->select($id);
                 break;
             case "POST":
-                if ($model->insert($this->input)) {
-                    http_response_code(201);
-                    $this->response["message"] = "Created";
+                if (!$model->test($this->input)) {
+                    if ($model->insert($this->input)) {
+                        http_response_code(201);
+                        $this->response["message"] = "Created";
+                        exit;
+                    }
                 }
+                $this->response["message"] = "Already";
                 break;
             case "PUT":
+                if ($current = $model->test($this->input)) {
+                    if ($current["id"] !== $this->input->id) {
+                        $this->response["message"] = "Already";
+                        exit;
+                    }
+                }
+                if ($model->update($this->input)) {
+                    $this->response["message"] = "Updated";
+                }
                 break;
             case "DELETE":
+                if ($model->delete($id)) {
+                    $this->response["message"] = "Deleted";
+                }
                 break;
             default:
                 http_response_code(405);

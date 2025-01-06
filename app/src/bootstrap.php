@@ -8,7 +8,7 @@ define("VIEW_DIR", SOURCE_PATH . "/Views/");
 
 $method = $_SERVER["REQUEST_METHOD"];
 
-$dbhost = "172.18.0.1";
+$dbhost = "mysql";
 $dbuser = "usmile";
 $dbpass = "D3v0t3D%$";
 

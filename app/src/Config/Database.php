@@ -30,7 +30,7 @@ class Database
         }
     }
 
-    protected static function query(string $sql, array $params = null)
+    protected static function query(string $sql, array $params = [])
     {
         if (http_response_code() !== 500) {
             try {
