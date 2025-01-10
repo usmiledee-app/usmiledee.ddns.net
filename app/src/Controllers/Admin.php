@@ -15,4 +15,10 @@ class Admin extends Controller
         self::get_view("admin/dashboard", $data);
         // 
     }
+
+    public function system()
+    {
+        $data["title"] = "System";
+        self::get_view("admin/tests", $data);
+    }
 }
