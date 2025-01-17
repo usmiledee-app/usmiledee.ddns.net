@@ -4,6 +4,14 @@ namespace Config;
 
 class Controller
 {
+    protected static function secret(string $input, string $action = "")
+    {
+        if ($action == "decrypt") {
+            return hex2bin(base64_decode($input));
+        }
+        return base64_encode(bin2hex($input));
+    }
+
     protected static function get_model(string $model)
     {
         if (file_exists(DATA_DIR . $model . ".php")) {

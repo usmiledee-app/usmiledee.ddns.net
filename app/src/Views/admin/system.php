@@ -23,13 +23,13 @@
                     <!--begin::Row-->
                     <div class="row">
                         <div class="col-sm-6">
-                            <h3 class="mb-0">Small Box</h3>
+                            <h3 class="mb-0"><?php echo $data["title"]; ?></h3>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-end">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Small Box
+                                    <?php echo $data["title"]; ?>
                                 </li>
                             </ol>
                         </div>
@@ -44,7 +44,19 @@
             <div class="app-content">
                 <!--begin::Container-->
                 <div class="container-fluid">
-                    <div id="canvas"></div>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title">Records Form</h5>
+                        </div>
+                        <form class="card-body">
+                            <!-- ... -->
+                             <div class="mb-3">
+                                <label for="file" class="form-label">Files upload</label>
+                                <input type="file" name="file_upload" id="file" class="form-control" multiple>
+                             </div>
+                             <input type="submit" value="Submit" class="btn btn-primary w-100">
+                        </form>
+                    </div>
                 </div>
                 <!--end::Container-->
             </div>
@@ -58,34 +70,8 @@
     <!--end::App Wrapper-->
 
     <?php include_once VIEW_DIR . "inc/plugins.php"; ?>
-    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <script type="text/javascript">
-        const qrCode = new QRCodeStyling({
-            width: 1080,
-            height: 1080,
-            type: "svg",
-            data: "https://usmiledee.app/home/gallery/e4da3b7fbbce2345d7772b0674a318d5",
-            image: "/assets/dist/img/brand-logo-xs.png",
-            dotsOptions: {
-                // color: "#4267b2",
-                color: "#212529",
-                // type: "extra-rounded",
-                type: "rounded",
-            },
-            backgroundOptions: {
-                color: "#f8f9fa",
-            },
-            imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 20
-            }
-        });
-
-        qrCode.append(document.getElementById("canvas"));
-        qrCode.download({
-            name: "โรงเรียนอนุบาลในฝันพระนครศรีอยุธยา ปีการศึกษา 2567",
-            extension: "png"
-        });
+        // 
     </script>
     <!--end::Script-->
 </body>

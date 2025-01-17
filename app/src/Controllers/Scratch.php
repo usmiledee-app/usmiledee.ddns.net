@@ -18,44 +18,146 @@ class Scratch extends Controller
         echo json_encode(["message" => "Hello, world!"]);
     }
 
-    public function user($id = 0)
+    public function example($id = 0)
     {
         global $method;
         $input = json_decode(file_get_contents("php://input"));
         $response = [];
-        $users = self::get_model("Users");
+        $target_model = self::get_model("Examples");
 
         switch ($method) {
             case "GET":
-                if ($result = $users->select($id)) {
+                if ($result = $target_model->select($id)) {
                     $response = $result;
                 }
                 break;
             case "POST":
-                if ($users->test($input)) {
+                if ($target_model->test($input)) {
                     http_response_code(302);
                     $response["message"] = "Account already exists";
                     break;
                 }
-                if ($users->insert($input)) {
+                if ($target_model->insert($input)) {
                     http_response_code(201);
                     $response["message"] = "New record created successfully";
                 }
                 break;
             case "PUT":
-                if ($current = $users->test($input)) {
+                if ($current = $target_model->test($input)) {
                     if ($current["id"] !== $input->id) {
                         http_response_code(302);
                         $response["message"] = "Account already exists";
                         break;
                     }
                 }
-                if ($users->update($input)) {
+                if ($target_model->update($input)) {
                     $response["message"] = "Records updated successfully";
                 }
                 break;
             case "DELETE":
-                if ($users->delete($id)) {
+                if ($target_model->delete($id)) {
+                    $response["message"] = "Record deleted successfully";
+                }
+                break;
+            default:
+                http_response_code(405);
+                $response["message"] = "Method Not Allowed";
+        }
+
+        echo json_encode($response);
+    }
+
+    public function resource($id = 0)
+    {
+        global $method;
+        $input = json_decode(file_get_contents("php://input"));
+        $response = [];
+        $target_model = self::get_model("Resources");
+
+        switch ($method) {
+            case "GET":
+                if ($result = $target_model->select($id)) {
+                    $response = $result;
+                }
+                break;
+            case "POST":
+                if ($target_model->test($input)) {
+                    http_response_code(302);
+                    $response["message"] = "Account already exists";
+                    break;
+                }
+                $input->secret = self::secret($input->secret);
+                if ($target_model->insert($input)) {
+                    http_response_code(201);
+                    $response["message"] = "New record created successfully";
+                }
+                break;
+            case "PUT":
+                if ($current = $target_model->test($input)) {
+                    if ($current["id"] !== $input->id) {
+                        http_response_code(302);
+                        $response["message"] = "Account already exists";
+                        break;
+                    }
+                }
+                $input->secret = self::secret($input->secret);
+                if ($target_model->update($input)) {
+                    $response["message"] = "Records updated successfully";
+                }
+                break;
+            case "DELETE":
+                if ($target_model->delete($id)) {
+                    $response["message"] = "Record deleted successfully";
+                }
+                break;
+            default:
+                http_response_code(405);
+                $response["message"] = "Method Not Allowed";
+        }
+
+        echo json_encode($response);
+    }
+
+    public function user($id = 0)
+    {
+        global $method;
+        $input = json_decode(file_get_contents("php://input"));
+        $response = [];
+        $target_model = self::get_model("Users");
+
+        switch ($method) {
+            case "GET":
+                if ($result = $target_model->select($id)) {
+                    $response = $result;
+                }
+                break;
+            case "POST":
+                if ($target_model->test($input)) {
+                    http_response_code(302);
+                    $response["message"] = "Email account already exists";
+                    break;
+                }
+                $input->secret = self::secret($input->secret);
+                if ($target_model->insert($input)) {
+                    http_response_code(201);
+                    $response["message"] = "New record created successfully";
+                }
+                break;
+            case "PUT":
+                if ($current = $target_model->test($input)) {
+                    if ($current["id"] !== $input->id) {
+                        http_response_code(302);
+                        $response["message"] = "Email account already exists";
+                        break;
+                    }
+                }
+                $input->secret = self::secret($input->secret);
+                if ($target_model->update($input)) {
+                    $response["message"] = "Records updated successfully";
+                }
+                break;
+            case "DELETE":
+                if ($target_model->delete($id)) {
                     $response["message"] = "Record deleted successfully";
                 }
                 break;
